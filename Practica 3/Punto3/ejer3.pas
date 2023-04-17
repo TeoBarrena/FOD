@@ -80,18 +80,16 @@ var
 begin
     reset(a);
     writeln('Ingrese el codigo de la novela que quiere modificar');readln(cod);
-    while(not eof(a)) do begin  
+    leer(a,n);
+    while(not eof(a) and (n.codigo <> cod)) do 
         leer(a,n);
-        while(n.codigo <> cod) do 
-            leer(a,n);
-        if(n.codigo = cod) then begin
+    if(n.codigo = cod) then begin
             leerNovelaModificada(n);
             seek(a,filepos(a)-1);
             write(a,n);
-        end
-        else    
-            writeln('No se encontro el codigo de novela');
-    end;
+    end
+    else    
+      writeln('No se encontro el codigo de novela');
     close(a);
 end;
 
@@ -102,24 +100,21 @@ var
 begin
     reset(a);
     writeln('Ingrese el codigo de la novela que quiere eliminar'); readln(cod);
-    while(not eof(a)) do begin
+    leer(a,n);
+    while(not eof(a) and (n.codigo <> cod)) do 
         leer(a,n);
-        while(cod <> n.codigo) do 
-            leer(a,n);
-        if(cod = n.codigo) then begin
-            pos:= filepos(a)-1;//pos toma el valor de la posicion del registro 
-            seek(a,0);
-            read(a,aux);//cargo en aux el registro que estaba en cabecera
-            seek(a,filepos(a)-1);//me paro de vuelta en el registro cabecera
-            n.codigo:= n.codigo * (-1);//el codigo queda negativo
-            write(a,n);//escribo en el registro cabecera el registro con el codigo negativo
-            seek(a,pos);
-            write(a,aux);//sobreescribo el registro
-        end
-        else 
-            writeln('No se encontro el codigo de novela');
-    
-    end;
+    if(cod = n.codigo) then begin
+        pos:= filepos(a)-1;//pos toma el valor de la posicion del registro 
+        seek(a,0);
+        read(a,aux);//cargo en aux el registro que estaba en cabecera
+        seek(a,filepos(a)-1);//me paro de vuelta en el registro cabecera
+        n.codigo:= n.codigo * (-1);//el codigo queda negativo
+        write(a,n);//escribo en el registro cabecera el registro con el codigo negativo
+        seek(a,pos);
+        write(a,aux);//sobreescribo el registro
+    end
+    else 
+      writeln('No se encontro el codigo de novela');
     close(a);
 end;
 
@@ -134,7 +129,8 @@ begin
     while(not eof(a)) do begin
         leer(a,n);
         writeln(txt,n.nombre);
-        writeln(txt,n.codigo,n.precio);
+        writeln(txt,n.codigo);
+        writeln(txt,n.precio:0:2);
     end;
     close(a);
     close(txt);
